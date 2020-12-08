@@ -12,12 +12,6 @@ class App extends Component {
       imageUrl: "",
       username: "",
       logined: false,
-      // counters: [
-      //   { id: 1, value: 4 },
-      //   { id: 2, value: 0 },
-      //   { id: 3, value: 0 },
-      //   { id: 4, value: 0 },
-      // ],
       ratings: [
         { id: 0, value: 0 },
         { id: 1, value: 0 },
@@ -64,33 +58,72 @@ class App extends Component {
     this.setState({ ratings });
     console.log("Ratings", { ratings });
   };
-  handleSumit = () => {
-    // 1. SUBMIT MY RESULT
-    // this.state.ratings.id
-    // this.state.ratings.value
-    // this.state.username
+  handleSubmit = () => {
+    // TODO 1. SUBMIT MY RESULT
+    var result = "https://subjective-cp.herokuapp.com/submit_rating";
+    result += "/" + this.state.username;
+    for (var i = 0; i < this.state.ratings.length; i++) {
+      result += "/" + this.state.ratings[i].value;
+    }
+    const response = axios
+      .post(result)
+      .then(function (response) {
+        let imageUrl = response.data.image;
+        this.setState({ imageUrl });
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .finally(function () {
+        // always executed
+        console.log("I always Execued");
+      });
+    console.log(response);
+    this.setState({ imageUrl: this.getImageUrl });
+    const ratings = this.state.ratings.map((c) => {
+      c.value = 0;
+      return c;
+    });
+    this.setState({ ratings });
+  };
 
-    // 2. RESET THE STATE
-  }
+  // TODO 2. RESET THE STATE
+
   getImageUrl = () => {
-    const response = axios.get("https://subjective-cp.herokuapp.com/request_image/name/kfkfk");
+    // TODO : It still blocked by CORS.
+    const response = axios
+      .get("https://subjective-cp.herokuapp.com/request_image/name/kfkfk")
+      .then(function (response) {
+        const imageUrl = response.data.image;
+        this.setState({ imageUrl });
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .finally(function () {
+        // always executed
+        console.log("I always Execued");
+      });
     console.log(response);
   };
   render() {
     return (
       <React.Fragment>
-        <Navbar
-          totalCounters={this.getSum()}
-        ></Navbar>
+        <Navbar totalCounters={this.getSum()}></Navbar>
         <Form
           logined={this.state.logined}
           onChange={this.handleUsernameChange}
           onKeyPress={this.handleKeypress}
           value={this.state.username}
         ></Form>
-        <button onClick={this.getImageUrl}>ga</button>
+        <div class="container">
+          <button onClick={this.getImageUrl}>GET Image URL (For debug)</button>
+        </div>
+
         <main className={this.getAllClass()}>
-        <img className="myimage" src="https://picsum.photos/200" alt=""/>
+          <img className="myimage" src="https://picsum.photos/200" alt="" />
           <Raters
             onRateChange={this.handleRatingChange}
             ratings={this.state.ratings}
@@ -103,12 +136,18 @@ class App extends Component {
               onIncreament={this.handleIncreament}
             ></Counters> */}
           </div>
-          <button type="button" class="btn btn-secondary btn-lg btn-block" onClick={this.handleSumit}>Submit</button>
+          <button
+            type="button"
+            class="btn btn-secondary btn-lg btn-block"
+            onClick={this.handleSubmit}
+          >
+            Done !!
+          </button>
         </main>
       </React.Fragment>
     );
   }
-  getSum(){
+  getSum() {
     var sum = 0;
     for (let index = 0; index < this.state.ratings.length; index++) {
       sum += this.state.ratings[index].value;

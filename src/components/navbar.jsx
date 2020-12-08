@@ -4,7 +4,7 @@ class Navbar extends Component {
   render() {
     return (
       <nav class="navbar navbar-light bg-light">
-        <a class="navbar-brand" >
+        <a class="navbar-brand" href="#">
           Subjective.ai
           <span className="badge badge-pill badge-secondary">
             {this.props.totalCounters}
