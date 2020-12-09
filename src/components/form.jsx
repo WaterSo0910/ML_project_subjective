@@ -3,7 +3,6 @@ import '../App.css'
 class Form extends Component {
   render() {
     return (
-      <form>
         <div className={this.getFormClass()}>
           <label>Username</label>
           <input
@@ -15,7 +14,6 @@ class Form extends Component {
             value={this.props.value}
           />
         </div>
-      </form>
     );
   }
   getFormClass() {

@@ -63,7 +63,7 @@ class App extends Component {
     // TODO 1. SUBMIT MY RESULT
     var result = "https://subjective-cp.herokuapp.com/submit_rating";
     result += "/" + this.state.username;
-    result += "/" + this.state.imageUrl.replace('https://subjective-cp.herokuapp.com/static/img/need_scored/','');
+    result += "/" + this.state.imageUrl.replace('https://subjective-cp.herokuapp.com/static/img/need_scored','');
     for (var i = 0; i < this.state.ratings.length; i++) {
       result += "/" + this.state.ratings[i].value;
     }
@@ -94,7 +94,7 @@ class App extends Component {
   getImageUrl = () => {
     // TODO : It still blocked by CORS.
     var url = "https://subjective-cp.herokuapp.com"
-    const response = axios.get("https://subjective-cp.herokuapp.com/request_image/name/kfkfk")
+    const response = axios.get("https://subjective-cp.herokuapp.com/request_image/name/"+this.state.username)
     response.then((res) => {
       console.log("in",res);
       url = url + res.data.image;
