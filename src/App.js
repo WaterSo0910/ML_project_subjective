@@ -28,6 +28,7 @@ class App extends Component {
     if (event.key === "Enter") {
       console.log(this.state.logined);
       // alert("Welcome! " + this.state.username + ".\nEnjoy the game!!");
+      this.getImageUrl();
       this.setState({ logined: true });
     }
     // Search
@@ -62,7 +63,7 @@ class App extends Component {
     // TODO 1. SUBMIT MY RESULT
     var result = "https://subjective-cp.herokuapp.com/submit_rating";
     result += "/" + this.state.username;
-    result += "/" + this.state.imageUrl;
+    result += "/" + this.state.imageUrl.replace('https://subjective-cp.herokuapp.com/static/img/need_scored/','');
     for (var i = 0; i < this.state.ratings.length; i++) {
       result += "/" + this.state.ratings[i].value;
     }
@@ -80,7 +81,7 @@ class App extends Component {
         console.log("I always Execued");
       });
     console.log(response);
-    this.setState({ imageUrl: this.getImageUrl });
+    this.getImageUrl();
     const ratings = this.state.ratings.map((c) => {
       c.value = 0;
       return c;
@@ -93,22 +94,26 @@ class App extends Component {
   getImageUrl = () => {
     // TODO : It still blocked by CORS.
     var url = "https://subjective-cp.herokuapp.com"
-    const response = axios
-      .get("https://subjective-cp.herokuapp.com/request_image/name/kfkfk")
-      .then(function (response) {
-        const imageUrl = url + response.data.image;
-        this.setState({ imageUrl });
-        console.log("GET " + imageUrl);
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      })
-      .finally(function () {
-        // always executed
-        console.log("I always Execued");
-      });
-    console.log(response);
+    const response = axios.get("https://subjective-cp.herokuapp.com/request_image/name/kfkfk")
+    response.then((res) => {
+      console.log("in",res);
+      url = url + res.data.image;
+      console.log("GET " + url);
+      this.setState({ imageUrl: url});
+      console.log("00 ", res);
+      console.log("000 ",this.state.imageUrl);
+      console.log(response);
+    });
+    // .then(function (response) {
+    // })
+    // .catch(function (error) {
+    //   // handle error
+    //   console.log(error);
+    // })
+    // .finally(function () {
+    //   // always executed
+    //   console.log("I always Execued");
+    // });
   };
   render() {
     return (
@@ -121,11 +126,10 @@ class App extends Component {
           value={this.state.username}
         ></Form>
         <div class="container">
-          <button onClick={this.getImageUrl}>GET Image URL (For debug)</button>
+          <button onClick={this.getImageUrl} className="disappear">GET Image URL (For debug)</button>
         </div>
-
         <main className={this.getAllClass()}>
-          <img className="myimage" src="https://picsum.photos/200" alt="" />
+          <img className="myimage" src={this.state.imageUrl} alt="" />
           <Raters
             onRateChange={this.handleRatingChange}
             ratings={this.state.ratings}
