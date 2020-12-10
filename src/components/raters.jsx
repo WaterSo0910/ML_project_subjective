@@ -31,7 +31,7 @@ class Raters extends Component {
     this.props.onRateChange(value, index);
   };
   getName(id){
-    var v = ['hp', 'pa', 'ma', 'sp', 'cr'];
+    var v = ['血量 (Health Points)', '物理攻擊 (Physical attack)', '魔法攻擊 (Magic Attack)', '反應速度 (Speed)', '爆擊 (Crit)'];
     return v[id];
   }
 
