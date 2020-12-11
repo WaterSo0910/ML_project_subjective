@@ -5,12 +5,12 @@ import Navbar from "./components/navbar";
 import Form from "./components/form";
 import Raters from "./components/raters";
 import axios from "axios";
+import Rater from "./components/rater";
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       imageUrl: "",
-      username: "",
       logined: false,
       ratings: [
         { id: 0, value: 0 },
@@ -63,7 +63,12 @@ class App extends Component {
     // TODO 1. SUBMIT MY RESULT
     var result = "https://subjective-cp.herokuapp.com/submit_rating";
     result += "/" + this.state.username;
-    result += "/" + this.state.imageUrl.replace('https://subjective-cp.herokuapp.com/static/img/need_scored','');
+    result +=
+      "/" +
+      this.state.imageUrl.replace(
+        "https://subjective-cp.herokuapp.com/static/img/need_scored",
+        ""
+      );
     for (var i = 0; i < this.state.ratings.length; i++) {
       result += "/" + this.state.ratings[i].value;
     }
@@ -93,15 +98,18 @@ class App extends Component {
 
   getImageUrl = () => {
     // TODO : It still blocked by CORS.
-    var url = "https://subjective-cp.herokuapp.com"
-    const response = axios.get("https://subjective-cp.herokuapp.com/request_image/name/"+this.state.username)
+    var url = "https://subjective-cp.herokuapp.com";
+    const response = axios.get(
+      "https://subjective-cp.herokuapp.com/request_image/name/" +
+        this.state.username
+    );
     response.then((res) => {
-      console.log("in",res);
+      console.log("in", res);
       url = url + res.data.image;
       console.log("GET " + url);
-      this.setState({ imageUrl: url});
+      this.setState({ imageUrl: url });
       console.log("00 ", res);
-      console.log("000 ",this.state.imageUrl);
+      console.log("000 ", this.state.imageUrl);
       console.log(response);
     });
     // .then(function (response) {
@@ -115,6 +123,10 @@ class App extends Component {
     //   console.log("I always Execued");
     // });
   };
+  triggerChildAlert = ()=>{
+    this.refs.raters.showAlert();
+    this.handleSubmit();
+  }
   render() {
     return (
       <React.Fragment>
@@ -126,38 +138,41 @@ class App extends Component {
           value={this.state.username}
         ></Form>
         <div class="container">
-          <button onClick={this.getImageUrl} className="disappear">GET Image URL (For debug)</button>
+          <button onClick={this.getImageUrl} className="disappear">
+            GET Image URL (For debug)
+          </button>
         </div>
         <main className={this.getAllClass()}>
           <img className="myimage" src={this.state.imageUrl} alt="" />
           <Raters
+            ref = "raters"
             onRateChange={this.handleRatingChange}
             ratings={this.state.ratings}
-          ></Raters>
-          <div className="disappear">
-            {/* <Counters
-              counters={this.state.counters}
-              onReset={this.handleReset}
-              onDelete={this.handleDelete}
-              onIncreament={this.handleIncreament}
-            ></Counters> */}
-          </div>
-          <button
-            type="button"
-            class="btn btn-secondary btn-lg btn-block"
-            onClick={this.handleSubmit}
           >
-            Done !!
-          </button>
+
+          </Raters>            
+          <button
+              type="button"
+              class="btn btn-secondary btn-lg btn-block"
+              onClick={this.handleSubmit}
+              onClick={this.triggerChildAlert}
+            >
+              Done !!
+            </button>
         </main>
       </React.Fragment>
     );
   }
   getSum() {
-    var sum = 0;
+    var sum = " ";
     for (let index = 0; index < this.state.ratings.length; index++) {
-      sum += this.state.ratings[index].value;
+      
+      if(index===4){
+        sum += this.state.ratings[index].value;
+      }
+      else sum += this.state.ratings[index].value + " - ";
     }
+    
     return sum;
   }
   getAllClass() {

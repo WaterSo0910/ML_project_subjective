@@ -7,7 +7,14 @@ class Raters extends Component {
     super(props);
     this.handleRatingChange = this.handleRatingChange.bind(this);
   }
-  
+  showAlert() {
+
+    this.refs.rater0.handleReset();
+    this.refs.rater1.handleReset();
+    this.refs.rater2.handleReset();
+    this.refs.rater3.handleReset();
+    this.refs.rater4.handleReset();
+  }
   render() {
     return (
       <div className="container">
@@ -16,6 +23,7 @@ class Raters extends Component {
             <div>
             <h5><span class="badge badge-secondary m-2">{this.getName(rating.id)}</span></h5>
           <Rater
+            ref ={"rater" + rating.id}
             onRateChange={this.handleRatingChange}
             key={rating.id}
             rating={rating}
